@@ -17,33 +17,37 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.datasets import load_iris
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.naive_bayes import GaussianNB
+from sklearn.model_selection import cross_val_score
 
 
-x,y= load_iris(return_X_y=True)
-#print(x)
-#print(y)
 
-x_train,x_test, y_train, y_test=train_test_split(x,y,test_size=0.2)
-# print(x_train.shape)
-# print(x_test.shape)
+x, y=load_iris(return_X_y=True)
 
 
-model=DecisionTreeClassifier()
-model1=KNeighborsClassifier()
-model2=LogisticRegression()
-model3=SVC()
-model3.fit(x_train,y_train)
 
-avc=model3.predict(x_test)
-avc1=accuracy_score(avc,y_test)
-# print(avc1)
+model=LogisticRegression()
+x_train, X_test, y_train, y_test=train_test_split(x, y, test_size=0.2)
+# cross=cross_val_score(model, x, y, cv=10)
+# print(cross.mean())
+# print(cross.std())
 
 
-model=[ LogisticRegression(), DecisionTreeClassifier(), KNeighborsClassifier(), RandomForestClassifier(),GaussianNB()]
-def compare_model():
+
+
+
+
+
+
+
+#features selection bias parameters
+#cross validation
+# This code snippet is performing the following tasks:
+model=[ LogisticRegression(max_iter=1000), DecisionTreeClassifier(), KNeighborsClassifier(), RandomForestClassifier(),GaussianNB(), SVC()]
+def cross_valid():
     for models in model:
-        models.fit(x_train,y_train)
-        y_pred=models.predict(x_test)
-        accuracy=accuracy_score(y_test, y_pred)
-        print(accuracy)
-compare_model()
+        cross_validstion= cross_val_score(models, x, y, cv=10)
+        print(models.__class__.__name__)
+        print(round(cross_validstion.mean()*100))
+        print(round(cross_validstion.std()*100))
+        print("-----------------------")
+cross_valid()
